@@ -1,0 +1,1354 @@
+# Asset Inventory Management System (AIMS)
+
+## Project Overview
+
+Build a production-ready **Asset Inventory Management System (AIMS)** using:
+
+* Laravel 12+
+* PHP 8.3+
+* MySQL (XAMPP)
+* Bootstrap 5 or Tailwind CSS
+* Laravel Eloquent ORM
+* Laravel Authentication & Authorization
+* DataTables
+* SweetAlert2
+* AJAX-based CRUD Operations
+* Responsive UI/UX
+* Clean Architecture
+* Service Layer Pattern
+* Role-Based Access Control (RBAC)
+* Audit Logging
+* Asset History Tracking
+
+The system will be used by the IT/MIS Department to manage and track company assets, assignments, accountability documents, employee ownership records, and complete asset lifecycle history.
+
+The system must be scalable, maintainable, production-ready, and follow Laravel best practices.
+
+---
+
+# Authentication System
+
+## Requirements
+
+Implement a secure authentication system.
+
+### Login
+
+* Login page only
+* No public registration page
+* No self-signup
+* Accounts can only be created by authorized users
+
+### Security
+
+* Laravel Authentication
+* Password Hashing
+* Session Management
+* Remember Me
+* CSRF Protection
+* Authorization Middleware
+* Password Reset (Optional)
+
+---
+
+# User Roles
+
+Implement Role-Based Access Control (RBAC).
+
+## 1. Admin
+
+Full System Access
+
+Can:
+
+* Manage users
+* Manage assets
+* Manage employees
+* Assign assets
+* Upload accountability documents
+* View audit logs
+* View asset history
+* Export reports
+* Configure system settings
+
+---
+
+## 2. MIS
+
+Functionally identical to Admin.
+
+Purpose:
+
+* Represents MIS Department personnel responsible for maintaining the Asset Inventory System.
+* Has all permissions available to Admin.
+
+Can:
+
+* Manage users
+* Manage assets
+* Manage employees
+* View reports
+* Manage accountability documents
+* Access all modules
+
+---
+
+## 3. Staff
+
+Limited Access
+
+Can:
+
+* View assets
+* View assigned assets
+* View employees
+
+Cannot:
+
+* Create users
+* Delete users
+* Add assets
+* Delete assets
+* Modify assignments
+* Access settings
+
+---
+
+# Main Application Layout
+
+After successful login, display a modern enterprise dashboard.
+
+## Layout Structure
+
+### Top Navigation Bar
+
+Display:
+
+* Company Logo
+* System Name
+* Current User
+* User Role
+* Notifications
+* Logout Button
+
+---
+
+### Sidebar Navigation
+
+Dashboard
+
+Assets
+
+Employees
+
+Users (Admin/MIS Only)
+
+Reports (Admin/MIS Only)
+
+Audit Logs (Admin/MIS Only)
+
+Settings (Admin/MIS Only)
+
+---
+
+# Dashboard Module
+
+Display real-time inventory metrics.
+
+## Dashboard Widgets
+
+### Total Assets
+
+Example:
+
+Total Assets: 1,245
+
+---
+
+### Assets by Category
+
+Display:
+
+* Laptops
+* Desktops
+* Monitors
+* Peripherals
+
+---
+
+### Asset Condition Summary
+
+Display:
+
+* Available
+* Active
+* Under Repair
+* Disposed
+
+---
+
+### Assignment Summary
+
+Display:
+
+* Assigned Assets
+* Unassigned Assets
+
+---
+
+### Recent Asset Registrations
+
+Display latest 10 assets.
+
+Columns:
+
+* Asset Tag
+* Category
+* Brand
+* Model
+* Status
+* Date Added
+
+---
+
+### Charts
+
+#### Asset Distribution by Category
+
+Pie Chart
+
+#### Monthly Asset Registrations
+
+Bar Chart
+
+#### Asset Status Distribution
+
+Doughnut Chart
+
+---
+
+# Assets Module
+
+The Assets Module is the core of the system.
+
+---
+
+## Asset Listing
+
+Display a searchable DataTable.
+
+Columns:
+
+* Asset Tag
+* Category
+* Serial Number
+* Brand
+* Model
+* Assigned Employee
+* Condition
+* Assignment Status
+* Purchase Date
+* Actions
+
+---
+
+## Search & Filtering
+
+### Search Bar
+
+Search by:
+
+* Asset Tag
+* Serial Number
+* Brand
+* Model
+* Employee Name
+
+---
+
+### Category Filter
+
+* All Categories
+* Laptop
+* Desktop
+* Monitor
+* Peripheral
+
+---
+
+### Condition Filter
+
+* All Conditions
+* Available
+* Active
+* Under Repair
+* Disposed
+
+---
+
+### Assignment Filter
+
+* Assigned
+* Unassigned
+
+---
+
+### Date Filter
+
+* Recent
+* Last 7 Days
+* Last 30 Days
+* Custom Range
+
+---
+
+# Asset Registration
+
+Asset creation should use a modern modal form.
+
+Each category should dynamically load its own form fields.
+
+---
+
+# Laptop Form
+
+Fields:
+
+Manufacturer Serial Number (S/N)
+
+Brand
+
+Model Name
+
+Processor (CPU)
+
+Motherboard
+
+OS Version
+
+OS Install Date
+
+Virus Protection
+
+Protection Install Date
+
+Purchase Date
+
+Arrival Date
+
+Deployment Date
+
+RAM Modules
+
+Dynamic Add Slot
+
+Fields:
+
+* Capacity
+* Type
+
+Storage Drives
+
+Dynamic Add Drive
+
+Fields:
+
+* Model
+* Size
+* Type (SSD/HDD)
+* Serial Number
+
+Condition
+
+Default:
+
+Available
+
+---
+
+# Desktop Form
+
+Fields:
+
+Manufacturer Serial Number
+
+Brand / Builder
+
+Model / Chassis
+
+Power Supply (PSU)
+
+Case Type
+
+Processor
+
+Motherboard
+
+OS Version
+
+OS Install Date
+
+Virus Protection
+
+Protection Install Date
+
+Purchase Date
+
+Arrival Date
+
+Deployment Date
+
+RAM Modules
+
+Storage Drives
+
+Condition
+
+---
+
+# Monitor Form
+
+Fields:
+
+Manufacturer Serial Number
+
+Brand
+
+Model
+
+Screen Size
+
+Resolution
+
+Refresh Rate
+
+Response Time
+
+Panel Type
+
+Purchase Date
+
+Arrival Date
+
+Deployment Date
+
+Condition
+
+---
+
+# Peripheral Form
+
+Peripheral Types:
+
+* Mouse
+* Keyboard
+* Flash Drive
+* Headset
+* HDMI
+* UPS
+* Others
+
+Fields:
+
+Manufacturer Serial Number
+
+Allow:
+
+"No Serial"
+
+Brand
+
+Model
+
+Connection Type
+
+* Wired
+* Wireless
+* Bluetooth
+
+Purchase Date
+
+Arrival Date
+
+Deployment Date
+
+Condition
+
+---
+
+# Asset Status Lifecycle
+
+Available
+
+↓
+
+Assigned
+
+↓
+
+Active
+
+↓
+
+Under Repair
+
+↓
+
+Returned
+
+↓
+
+Disposed
+
+Every status change must be recorded.
+
+No status change should ever overwrite historical records.
+
+---
+
+# Asset Assignment Module
+
+Assets can be assigned to employees.
+
+Assignment records must contain:
+
+* Asset
+* Employee
+* Assigned Date
+* Returned Date
+* Assignment Notes
+* Assigned By
+
+Requirements:
+
+* Full assignment history
+* Return tracking
+* Reassignment support
+* No deletion of assignment history
+
+---
+
+# Asset History Tracking (Critical Feature)
+
+Every asset must have its own dedicated history timeline.
+
+This is separate from system audit logs.
+
+The Asset History page should show the complete lifecycle of the asset.
+
+Example Timeline:
+
+Asset Created
+
+↓
+
+Assigned to Employee
+
+↓
+
+Status Changed to Active
+
+↓
+
+RAM Upgraded
+
+↓
+
+Transferred to Another Employee
+
+↓
+
+Sent for Repair
+
+↓
+
+Returned from Repair
+
+↓
+
+Disposed
+
+---
+
+## Asset History Records
+
+Track:
+
+* Asset ID
+* Asset Tag
+* Action Type
+* Description
+* Previous Value
+* New Value
+* Performed By
+* Date & Time
+
+Examples:
+
+Asset Created
+
+Asset Updated
+
+Assigned
+
+Returned
+
+Transferred
+
+Repair Started
+
+Repair Completed
+
+Status Changed
+
+Specification Updated
+
+Document Attached
+
+Disposed
+
+---
+
+## Asset Details Page
+
+Each asset should have:
+
+### Asset Information
+
+### Assignment History
+
+### Asset History Timeline
+
+### Uploaded Documents
+
+### QR Code
+
+### Barcode
+
+---
+
+# Employee Module
+
+Manage employees and their assigned assets.
+
+---
+
+## Employee Listing
+
+Columns:
+
+* Employee Number
+* Employee Name
+* Department
+* Position
+* Number of Devices Assigned
+* Employment Status
+* Actions
+
+---
+
+## Employment Status
+
+Options:
+
+* Active
+* Resigned
+* AWOL
+* Retired
+* Terminated
+
+---
+
+## Employee Profile
+
+Display:
+
+### Personal Information
+
+### Assigned Assets
+
+### Assignment History
+
+### Accountability Documents
+
+---
+
+## Employee Fields
+
+Employee Number
+
+First Name
+
+Middle Name
+
+Last Name
+
+Department
+
+Position
+
+Email
+
+Contact Number
+
+Date Hired
+
+Date Separated
+
+Employment Status
+
+Remarks
+
+---
+
+# Accountability Documents
+
+Allow document uploads per employee.
+
+Supported Formats:
+
+* PDF
+* JPG
+* JPEG
+* PNG
+
+Maximum:
+
+10 MB
+
+Store:
+
+* Employee
+* File Name
+* Upload Date
+* Uploaded By
+
+Features:
+
+* Preview PDF
+* Preview Images
+* Download
+* Delete
+
+---
+
+# User Management Module
+
+Admin and MIS only.
+
+Features:
+
+* Create User
+* Edit User
+* Disable User
+* Reset Password
+* Assign Role
+
+Fields:
+
+* Full Name
+* Username
+* Email
+* Password
+* Role
+* Status
+
+Roles:
+
+* Admin
+* MIS
+* Staff
+
+---
+
+# Audit Logs Module
+
+Track all user activities.
+
+Log:
+
+* Login
+* Logout
+* User Creation
+* User Updates
+* Asset Creation
+* Asset Updates
+* Asset Assignment
+* Employee Creation
+* Employee Updates
+* Document Uploads
+* Report Exports
+
+Fields:
+
+* User
+* Action
+* Module
+* Description
+* IP Address
+* Timestamp
+
+---
+
+# Asset Tag Generation
+
+Automatically generate unique asset tags.
+
+Examples:
+
+LAP-000001
+
+DESK-000001
+
+MON-000001
+
+PER-000001
+
+Requirements:
+
+* Auto Increment
+* Unique
+* Never Reused
+* Immutable
+
+---
+
+# Database Design
+
+Create normalized database tables.
+
+Required Tables:
+
+users
+
+roles
+
+permissions
+
+employees
+
+assets
+
+asset_categories
+
+asset_ram_modules
+
+asset_storage_drives
+
+asset_assignments
+
+asset_histories
+
+employee_documents
+
+audit_logs
+
+password_reset_tokens
+
+sessions
+
+---
+
+# Reporting Module
+
+Generate:
+
+### Asset Inventory Report
+
+### Asset Assignment Report
+
+### Employee Asset Accountability Report
+
+### Disposed Assets Report
+
+### Assets Under Repair Report
+
+### Asset History Report
+
+### Employee Asset Summary
+
+Export Formats:
+
+* Excel
+* CSV
+* PDF
+
+---
+
+# QR Code & Barcode Support
+
+Generate QR Code and Barcode for every asset.
+
+Scanning QR Code should open the Asset Details Page.
+
+---
+
+# UI/UX Requirements
+
+Design should resemble a modern enterprise asset management platform.
+
+Requirements:
+
+* Responsive Layout
+* Modern Dashboard
+* Sidebar Navigation
+* Card-Based Statistics
+* AJAX CRUD Operations
+* DataTables
+* Searchable Dropdowns
+* SweetAlert Notifications
+* Loading States
+* Empty States
+* Dark Mode Support
+* Mobile Friendly
+
+Color Palette:
+
+* Professional Blue
+* White
+* Gray
+
+---
+
+# Security Requirements
+
+Implement:
+
+* CSRF Protection
+* XSS Protection
+* SQL Injection Protection
+* Laravel Policies
+* Middleware Authorization
+* Secure File Upload Validation
+* Session Security
+* Activity Logging
+
+---
+
+# Development Standards
+
+Follow:
+
+* SOLID Principles
+* Repository Pattern
+* Service Layer Pattern
+* Laravel Best Practices
+* Clean Code
+* PSR Standards
+* Reusable Components
+* Scalable Architecture
+
+---
+
+# Deliverables
+
+Generate:
+
+1. Complete Laravel Project Structure
+2. Database Schema
+3. ERD Diagram
+4. Database Migrations
+5. Models
+6. Controllers
+7. Services
+8. Repositories
+9. Policies
+10. Middleware
+11. Seeders
+12. Factories
+13. Authentication System
+14. Dashboard Module
+15. Asset Management Module
+16. Employee Management Module
+17. User Management Module
+18. Asset Assignment Module
+19. Asset History Module
+20. Audit Logging Module
+21. Reporting Module
+22. Document Management Module
+23. QR Code Integration
+24. Barcode Integration
+25. Export Functionality
+26. Responsive Blade Templates
+27. Installation Guide
+28. Production-Ready Code
+
+The final system should function as a complete enterprise-grade Asset Inventory Management System with comprehensive asset lifecycle tracking, employee accountability management, assignment history, audit trails, role-based access control, reporting capabilities, and long-term scalability.
+
+
+# Future-Proof Architecture & Maintainability Requirements (Critical)
+
+This system will be maintained and expanded by different programmers in the future. Therefore, the codebase must be designed for long-term maintainability, scalability, and ease of customization.
+
+The architecture should prioritize readability and modularity over short-term development speed.
+
+---
+
+# Development Philosophy
+
+Build the system as if it will continue to evolve for the next 5-10 years.
+
+Future developers should be able to:
+
+* Add new asset categories
+* Add new modules
+* Modify existing workflows
+* Add integrations
+* Change UI designs
+* Add reports
+* Add approval systems
+* Add API integrations
+* Add notification systems
+* Add mobile applications
+
+without requiring major rewrites of existing code.
+
+---
+
+# Modular System Architecture
+
+The system must follow a modular architecture.
+
+Each major module should be isolated.
+
+Example Modules:
+
+* Authentication
+* Dashboard
+* Assets
+* Asset Assignments
+* Asset History
+* Employees
+* Employee Documents
+* Users
+* Roles & Permissions
+* Reports
+* Audit Logs
+* Settings
+
+Each module should have its own:
+
+* Controllers
+* Models
+* Requests
+* Services
+* Repository Classes
+* Views
+* Routes
+
+Future developers should be able to add a new module with minimal impact on existing modules.
+
+---
+
+# Service Layer Pattern
+
+Business logic must NEVER be placed directly inside controllers.
+
+Controllers should only:
+
+* Receive requests
+* Validate requests
+* Call Services
+* Return responses
+
+All business logic should exist inside Service Classes.
+
+Example:
+
+AssetService
+
+EmployeeService
+
+AssignmentService
+
+ReportService
+
+UserService
+
+HistoryService
+
+AuditLogService
+
+This makes future modifications significantly easier.
+
+---
+
+# Repository Pattern
+
+Database operations should be abstracted using repositories.
+
+Avoid placing complex database queries directly inside controllers.
+
+Example:
+
+AssetRepository
+
+EmployeeRepository
+
+UserRepository
+
+AssignmentRepository
+
+HistoryRepository
+
+This ensures future database changes can be handled without modifying business logic.
+
+---
+
+# Configuration Driven Design
+
+Avoid hardcoded values.
+
+Store configurable values inside:
+
+* Database settings table
+* Laravel config files
+* Enum classes
+
+Examples:
+
+Asset Statuses
+
+Roles
+
+Employment Statuses
+
+Asset Categories
+
+Document Types
+
+Notification Settings
+
+System Settings
+
+Future developers should be able to add new values without changing core application logic.
+
+---
+
+# Dynamic Asset Categories
+
+The Asset Category system must be expandable.
+
+Current Categories:
+
+* Laptop
+* Desktop
+* Monitor
+* Peripheral
+
+Future developers must be able to add:
+
+* Printers
+* Servers
+* Network Switches
+* Routers
+* CCTV Devices
+* Mobile Phones
+* Tablets
+* IoT Devices
+
+without restructuring the database.
+
+Design the category system dynamically.
+
+---
+
+# Extensible Asset Specifications
+
+Asset specifications should support future hardware types.
+
+Avoid creating rigid structures that only support current categories.
+
+Future asset categories may require different specifications.
+
+Example:
+
+Server:
+
+* Rack Unit
+* CPU Count
+* ECC RAM
+
+Router:
+
+* WAN Ports
+* Firmware Version
+
+Printer:
+
+* Toner Type
+* Print Count
+
+Design specifications using flexible relational tables or JSON-based specifications where appropriate.
+
+---
+
+# Event-Driven Design
+
+Use Laravel Events and Listeners whenever possible.
+
+Examples:
+
+Asset Created
+
+Asset Assigned
+
+Asset Returned
+
+Employee Created
+
+Document Uploaded
+
+Status Changed
+
+Benefits:
+
+Future developers can add:
+
+* Email notifications
+* SMS notifications
+* Teams integration
+* Slack integration
+* Approval workflows
+
+without modifying core modules.
+
+---
+
+# API Ready Architecture
+
+Although the initial system is web-based, it should be designed with future API support in mind.
+
+Requirements:
+
+* Service-based architecture
+* API resource support
+* Consistent response structure
+* RESTful standards
+
+Future mobile applications should be able to consume the same business logic.
+
+---
+
+# Database Maintainability
+
+Requirements:
+
+* Proper foreign keys
+* Indexed columns
+* Normalized tables
+* Soft Deletes where appropriate
+* Timestamps on all tables
+
+Avoid database designs that make future migrations difficult.
+
+---
+
+# Code Documentation
+
+Every major component must contain documentation.
+
+Requirements:
+
+* PHPDoc comments
+* Method descriptions
+* Service descriptions
+* Complex query explanations
+* Database relationship comments
+
+Future developers should quickly understand the system structure.
+
+---
+
+# Naming Standards
+
+Use clear and consistent naming conventions.
+
+Examples:
+
+AssetController
+
+AssetService
+
+AssetRepository
+
+AssetHistoryService
+
+EmployeeDocumentController
+
+Avoid abbreviations that future developers may not understand.
+
+---
+
+# UI Component Reusability
+
+Create reusable UI components.
+
+Examples:
+
+* Tables
+* Forms
+* Filters
+* Modals
+* Cards
+* Status Badges
+* Action Buttons
+
+Future developers should be able to reuse components without duplication.
+
+---
+
+# Settings Module
+
+Create a centralized Settings Module.
+
+Admin/MIS should be able to manage:
+
+* Company Name
+* Company Logo
+* Default Asset Statuses
+* System Preferences
+* Report Settings
+
+Future settings should be easily added without modifying core code.
+
+---
+
+# Audit & History Extensibility
+
+The Audit Log and Asset History systems must be generic and reusable.
+
+Future modules should be able to log activities using the same logging framework.
+
+Example Future Logs:
+
+* Procurement Module
+* Maintenance Module
+* Helpdesk Module
+* Reservation Module
+* Approval Module
+
+without creating separate logging systems.
+
+---
+
+# Plugin-Friendly Design (Preferred)
+
+Where practical, structure the application so future developers can introduce:
+
+* New Reports
+* New Asset Types
+* New Dashboard Widgets
+* New Notification Channels
+* New Integrations
+
+without modifying existing core modules.
+
+---
+
+# Final Objective
+
+The codebase should be easy enough that a new Laravel developer can understand the project structure within a few hours and confidently add new features without breaking existing functionality.
+
+Maintainability, scalability, readability, documentation, and extensibility are considered first-class requirements and are just as important as the system's functionality.
+
