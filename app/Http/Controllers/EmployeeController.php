@@ -189,4 +189,18 @@ class EmployeeController extends Controller
             'message' => "Successfully imported {$importedCount} employees."
         ]);
     }
+
+    public function history($id)
+    {
+        $history = \App\Models\AssetHistory::with('performer')
+            ->where(function($q) use ($id) {
+                $q->where('new_value', (string)$id)
+                  ->orWhere('previous_value', (string)$id);
+            })
+            ->whereIn('action_type', ['Assigned', 'Unassigned'])
+            ->latest()
+            ->get();
+            
+        return response()->json($history);
+    }
 }

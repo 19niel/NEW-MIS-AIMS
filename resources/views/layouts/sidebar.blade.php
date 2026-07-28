@@ -1,7 +1,7 @@
 <aside class="w-64 bg-gradient-to-b from-primary-900 to-primary-800 text-white flex-shrink-0 hidden md:flex md:flex-col shadow-xl z-20 h-screen sticky top-0">
-    <div class="h-20 flex items-center justify-center border-b border-primary-700 bg-white overflow-hidden">
+    <div class="h-20 flex items-center justify-center border-b border-primary-700 bg-white">
         <a href="{{ route('dashboard') }}" class="w-full h-full flex items-center justify-center">
-            <x-application-logo class="h-16 w-auto object-contain transform scale-110 transition-transform" />
+            <x-application-logo class="h-20 w-auto object-contain transform scale-[1.4] transition-transform hover:scale-[1.2]" />
         </a>
     </div>
 

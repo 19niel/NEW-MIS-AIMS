@@ -12,15 +12,40 @@
                         </button>
                     </div>
 
-                    <div class="mb-4 flex items-center space-x-2">
-                        <label for="conditionFilter" class="text-sm font-medium text-gray-700">Filter Condition:</label>
-                        <select id="conditionFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
-                            <option value="">All Conditions</option>
-                            <option value="Available">Available</option>
-                            <option value="Active">Active</option>
-                            <option value="Under Repair">Under Repair</option>
-                            <option value="Disposed">Disposed</option>
-                        </select>
+                    <div class="mb-4 flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <label for="conditionFilter" class="text-sm font-medium text-gray-700">Filter Condition:</label>
+                            <select id="conditionFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <option value="">All Conditions</option>
+                                <option value="Available">Available</option>
+                                <option value="Active">Active</option>
+                                <option value="Under Repair">Under Repair</option>
+                                <option value="Disposed">Disposed</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label for="categoryFilter" class="text-sm font-medium text-gray-700">Category:</label>
+                            <select id="categoryFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <option value="">All Categories</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div id="peripheralFilterContainer" class="flex items-center space-x-2 hidden">
+                            <label for="peripheralTypeFilter" class="text-sm font-medium text-gray-700">Peripheral Type:</label>
+                            <select id="peripheralTypeFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <option value="">All Types</option>
+                                <option value="Laptop Charger">Laptop Charger</option>
+                                <option value="Mouse">Mouse</option>
+                                <option value="Keyboard">Keyboard</option>
+                                <option value="Flash Drive">Flash Drive</option>
+                                <option value="Headset">Headset</option>
+                                <option value="HDMI">HDMI</option>
+                                <option value="UPS">UPS</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
                     </div>
                     <table id="assetsTable" class="display w-full border-collapse">
                         <thead>
@@ -303,7 +328,16 @@
                             return `<span class="font-bold text-primary-600">${data}</span>`;
                         }
                     },
-                    { data: 'category.name' },
+                    { 
+                        data: 'category.name',
+                        render: function(data, type, row) {
+                            let catName = data || 'N/A';
+                            if (catName.toLowerCase().includes('peripheral') && row.specifications && row.specifications.peripheral_type) {
+                                return `<span class="inline-flex">${catName} - ${row.specifications.peripheral_type}</span>`;
+                            }
+                            return catName;
+                        }
+                    },
                     { 
                         data: null,
                         render: function(data) {
@@ -353,6 +387,35 @@
             $('#conditionFilter').on('change', function() {
                 // Column 5 is 'condition'
                 table.column(5).search(this.value).draw();
+            });
+
+            $('#categoryFilter').on('change', function() {
+                let val = $(this).val();
+                let isPeripheral = val.toLowerCase().includes('peripheral');
+                
+                if (isPeripheral) {
+                    $('#peripheralFilterContainer').removeClass('hidden');
+                    let pType = $('#peripheralTypeFilter').val();
+                    if (pType) {
+                        table.column(1).search(val + ' - ' + pType).draw();
+                    } else {
+                        table.column(1).search(val).draw();
+                    }
+                } else {
+                    $('#peripheralFilterContainer').addClass('hidden');
+                    $('#peripheralTypeFilter').val('');
+                    table.column(1).search(val).draw();
+                }
+            });
+
+            $('#peripheralTypeFilter').on('change', function() {
+                let pType = $(this).val();
+                let cType = $('#categoryFilter').val();
+                if (pType) {
+                    table.column(1).search(cType + ' - ' + pType).draw();
+                } else {
+                    table.column(1).search(cType).draw();
+                }
             });
 
             // Dynamic Form Toggle

@@ -182,6 +182,14 @@
                         <!-- Assets injected here -->
                     </ul>
                 </div>
+                
+                <div class="mb-6">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">History Logs</h4>
+                    <div id="employeeHistoryContent" class="space-y-4 max-h-60 overflow-y-auto p-2 bg-gray-50 rounded border">
+                        <!-- Filled via AJAX -->
+                    </div>
+                </div>
+
                 <div class="mt-4 border-t pt-4 flex justify-end">
                     <button type="button" onclick="closeViewModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Close</button>
                 </div>
@@ -440,7 +448,33 @@
             }
             $('#view_assets_list').html(assetsHtml);
 
+            $('#employeeHistoryContent').html('<div class="text-center text-gray-500 py-4">Loading history...</div>');
             $('#viewEmployeeModal').removeClass('hidden');
+
+            $.get(`/employees/${data.id}/history`, function(historyData) {
+                if (historyData.length === 0) {
+                    $('#employeeHistoryContent').html('<div class="text-center text-gray-500 py-4">No history records found.</div>');
+                    return;
+                }
+                
+                let html = '<ul class="relative border-l border-gray-200 ml-3">';
+                historyData.forEach(log => {
+                    let date = new Date(log.created_at).toLocaleString();
+                    let performer = log.performer ? log.performer.name : 'System';
+                    html += `
+                        <li class="mb-4 ml-4">
+                            <div class="absolute w-3 h-3 bg-primary-600 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                            <time class="mb-1 text-xs font-normal leading-none text-gray-400">${date}</time>
+                            <h3 class="text-sm font-semibold text-gray-900">${log.action_type} <span class="font-normal text-xs text-gray-500">by ${performer}</span></h3>
+                            <p class="text-sm font-normal text-gray-500">${log.description}</p>
+                        </li>
+                    `;
+                });
+                html += '</ul>';
+                $('#employeeHistoryContent').html(html);
+            }).fail(function() {
+                $('#employeeHistoryContent').html('<div class="text-center text-red-500 py-4">Failed to load history.</div>');
+            });
         }
 
         function closeViewModal() {

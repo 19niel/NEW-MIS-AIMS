@@ -2,11 +2,17 @@
     <!-- Primary Navigation Menu -->
     <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
-            <div class="flex">
+            <div class="flex items-center">
+                <!-- System Title (Desktop) -->
+                <div class="hidden md:flex items-center">
+                    <span class="text-2xl font-bold text-gray-800 tracking-wide">Asset Inventory Management System</span>
+                </div>
+
                 <!-- Logo (Mobile only, optional) -->
                 <div class="shrink-0 flex items-center md:hidden">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-14 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
+                        <x-application-logo class="block h-10 w-auto fill-current text-gray-800" />
+                        <span class="text-xl font-bold text-gray-800 tracking-wide">AIMS</span>
                     </a>
                 </div>
             </div>

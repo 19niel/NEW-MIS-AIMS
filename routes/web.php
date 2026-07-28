@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('employees/import', [EmployeeController::class, 'import'])->name('employees.import');
     Route::get('employees/import-template', [EmployeeController::class, 'downloadTemplate'])->name('employees.import-template');
     Route::get('employees/{employee}/print-accountability', [EmployeeController::class, 'printAccountability'])->name('employees.print-accountability');
+    Route::get('employees/{employee}/history', [EmployeeController::class, 'history'])->name('employees.history');
     Route::resource('employees', EmployeeController::class);
     // User Management
     Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
