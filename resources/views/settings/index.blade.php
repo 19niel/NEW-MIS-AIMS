@@ -124,7 +124,7 @@
             $('#categoryForm').on('submit', function(e) {
                 e.preventDefault();
                 let id = $('#category_id').val();
-                let url = id ? `/settings/categories/${id}` : '{{ route('settings.categories.store') }}';
+                let url = id ? `${window.AppUrl}/settings/categories/${id}` : '{{ route('settings.categories.store') }}';
                 let method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -193,7 +193,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/settings/categories/${id}`,
+                        url: `${window.AppUrl}/settings/categories/${id}`,
                         type: 'DELETE',
                         success: function(response) {
                             table.ajax.reload();

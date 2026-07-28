@@ -438,7 +438,7 @@
             $('#assetForm').on('submit', function(e) {
                 e.preventDefault();
                 let id = $('#asset_id').val();
-                let url = id ? `/assets/${id}` : '{{ route('assets.store') }}';
+                let url = id ? `${window.AppUrl}/assets/${id}` : '{{ route('assets.store') }}';
                 let method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -541,7 +541,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/assets/${id}`,
+                        url: `${window.AppUrl}/assets/${id}`,
                         type: 'DELETE',
                         success: function(response) {
                             table.ajax.reload();
@@ -572,7 +572,7 @@
             $('#historyContent').html('<div class="text-center text-gray-500 py-4">Loading history...</div>');
             $('#viewAssetModal').removeClass('hidden');
             
-            $.get(`/assets/${data.id}/history`, function(historyData) {
+            $.get(`${window.AppUrl}/assets/${data.id}/history`, function(historyData) {
                 if (historyData.length === 0) {
                     $('#historyContent').html('<div class="text-center text-gray-500 py-4">No history records found.</div>');
                     return;

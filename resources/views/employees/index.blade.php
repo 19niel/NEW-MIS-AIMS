@@ -290,7 +290,7 @@
             $('#employeeForm').on('submit', function(e) {
                 e.preventDefault();
                 let id = $('#employee_id').val();
-                let url = id ? `/employees/${id}` : '{{ route('employees.store') }}';
+                let url = id ? `${window.AppUrl}/employees/${id}` : '{{ route('employees.store') }}';
                 
                 let formData = new FormData(this);
                 if (id) {
@@ -421,7 +421,7 @@
             $('#view_status').text(data.employment_status);
             $('#view_separated').text(data.date_separated || 'N/A');
             
-            let printBtnHtml = `<a href="/employees/${data.id}/print-accountability" target="_blank" class="px-3 py-1 mr-2 bg-green-100 text-green-700 rounded hover:bg-green-200 font-medium border border-green-200 inline-block">Print</a>`;
+            let printBtnHtml = `<a href="${window.AppUrl}/employees/${data.id}/print-accountability" target="_blank" class="px-3 py-1 mr-2 bg-green-100 text-green-700 rounded hover:bg-green-200 font-medium border border-green-200 inline-block">Print</a>`;
             if (data.accountability_form) {
                 $('#view_preview_btn_container').html(printBtnHtml + `<button onclick='previewForm("${data.accountability_form}")' class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-medium border border-blue-200">View Form</button>`);
             } else {
@@ -451,7 +451,7 @@
             $('#employeeHistoryContent').html('<div class="text-center text-gray-500 py-4">Loading history...</div>');
             $('#viewEmployeeModal').removeClass('hidden');
 
-            $.get(`/employees/${data.id}/history`, function(historyData) {
+            $.get(`${window.AppUrl}/employees/${data.id}/history`, function(historyData) {
                 if (historyData.length === 0) {
                     $('#employeeHistoryContent').html('<div class="text-center text-gray-500 py-4">No history records found.</div>');
                     return;
@@ -511,7 +511,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/employees/${id}`,
+                        url: `${window.AppUrl}/employees/${id}`,
                         type: 'DELETE',
                         success: function(response) {
                             table.ajax.reload();
@@ -529,7 +529,7 @@
         }
 
         function previewForm(path) {
-            let url = `/storage/${path}`;
+            let url = `${window.AppUrl}/storage/${path}`;
             let ext = url.split('.').pop().toLowerCase();
             let html = '';
             

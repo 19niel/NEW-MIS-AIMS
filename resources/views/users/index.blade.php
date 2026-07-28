@@ -135,7 +135,7 @@
             $('#userForm').on('submit', function(e) {
                 e.preventDefault();
                 let id = $('#user_id').val();
-                let url = id ? `/users/${id}` : '{{ route('users.store') }}';
+                let url = id ? `${window.AppUrl}/users/${id}` : '{{ route('users.store') }}';
                 let method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -207,7 +207,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/users/${id}`,
+                        url: `${window.AppUrl}/users/${id}`,
                         type: 'DELETE',
                         success: function(response) {
                             table.ajax.reload();

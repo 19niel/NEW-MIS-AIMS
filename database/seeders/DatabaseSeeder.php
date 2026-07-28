@@ -45,5 +45,10 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $staff->assignRole($staffRole);
+
+        // Seed default asset categories
+        $this->call([
+            AssetCategorySeeder::class,
+        ]);
     }
 }
