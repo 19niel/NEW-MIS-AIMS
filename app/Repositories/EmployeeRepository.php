@@ -8,7 +8,7 @@ class EmployeeRepository
 {
     public function getAll()
     {
-        return Employee::withCount('assets')->latest()->get();
+        return Employee::with(['assets.category'])->withCount('assets')->latest()->get();
     }
 
     public function create(array $data)

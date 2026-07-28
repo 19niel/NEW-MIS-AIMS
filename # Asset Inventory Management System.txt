@@ -4,25 +4,31 @@
 
 Build a production-ready **Asset Inventory Management System (AIMS)** using:
 
-* Laravel 12+
-* PHP 8.3+
-* MySQL (XAMPP)
-* Bootstrap 5 or Tailwind CSS
-* Laravel Eloquent ORM
-* Laravel Authentication & Authorization
-* DataTables
-* SweetAlert2
-* AJAX-based CRUD Operations
+* PHP based  for simplicity since it will be hosted through xampp server 
+* Account remember to login so they won't have to login everytime 
 * Responsive UI/UX
 * Clean Architecture
 * Service Layer Pattern
 * Role-Based Access Control (RBAC)
 * Audit Logging
 * Asset History Tracking
+* SQL Injection Protection
+* Cross-Site Scripting (XSS) Protection
+* CSRF Token
+* password hashing with bcrypt
+* Responsive UI/UX
+* Clean Architecture
+* Service Layer Pattern
+* Role-Based Access Control (RBAC)
+* Audit Logging
+* Asset History Tracking
+* SQL Injection Protection
+* Cross-Site Scripting (XSS) Protection
+* CSRF Token
 
 The system will be used by the IT/MIS Department to manage and track company assets, assignments, accountability documents, employee ownership records, and complete asset lifecycle history.
 
-The system must be scalable, maintainable, production-ready, and follow Laravel best practices.
+The system must be scalable, maintainable, production-ready, and follow PHP best practices.
 
 ---
 
@@ -41,7 +47,6 @@ Implement a secure authentication system.
 
 ### Security
 
-* Laravel Authentication
 * Password Hashing
 * Session Management
 * Remember Me

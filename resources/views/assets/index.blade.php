@@ -1,19 +1,17 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Asset Management') }}
-            </h2>
-            <button onclick="openModal()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded shadow transition-colors">
-                + Register Asset
-            </button>
-        </div>
-    </x-slot>
-
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+                            {{ __('Asset Management') }}
+                        </h2>
+                        <button onclick="openModal()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded shadow transition-colors">
+                            + Register Asset
+                        </button>
+                    </div>
+
                     <div class="mb-4 flex items-center space-x-2">
                         <label for="conditionFilter" class="text-sm font-medium text-gray-700">Filter Condition:</label>
                         <select id="conditionFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
@@ -98,7 +96,7 @@
                                     <select id="assigned_to" name="assigned_to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                                         <option value="">Unassigned</option>
                                         @foreach($employees as $employee)
-                                            <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_number }})</option>
+                                            <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->department }})</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -110,6 +108,10 @@
                                         <option value="Under Repair">Under Repair</option>
                                         <option value="Disposed">Disposed</option>
                                     </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700">Remarks</label>
+                                    <textarea id="remarks" name="remarks" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -209,6 +211,7 @@
                                     <label class="block text-sm font-medium text-gray-700">Peripheral Type</label>
                                     <select id="peripheral_type" name="peripheral_type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                                         <option value="" disabled selected>Select Type</option>
+                                        <option value="Laptop Charger">Laptop Charger</option>
                                         <option value="Mouse">Mouse</option>
                                         <option value="Keyboard">Keyboard</option>
                                         <option value="Flash Drive">Flash Drive</option>
@@ -224,7 +227,6 @@
                                         <option value="" disabled selected>Select Connection</option>
                                         <option value="Wired">Wired</option>
                                         <option value="Wireless">Wireless</option>
-                                        <option value="Bluetooth">Bluetooth</option>
                                     </select>
                                 </div>
                             </div>
@@ -240,16 +242,43 @@
         </div>
     </div>
 
-    <!-- History Modal -->
-    <div id="historyModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white mb-20">
+    <!-- View Asset Modal -->
+    <div id="viewAssetModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white mb-20">
             <div class="mt-3">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">Asset History</h3>
-                <div id="historyContent" class="space-y-4 max-h-96 overflow-y-auto p-2">
-                    <!-- Filled via AJAX -->
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Asset Details</h3>
+                    <button type="button" onclick="closeViewAssetModal()" class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">Close</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <div class="mt-6 border-t pt-4 flex justify-end">
-                    <button type="button" onclick="closeHistoryModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Close</button>
+                
+                <div class="mb-6">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">General Information</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div><span class="font-bold text-gray-700">Asset Tag:</span> <span id="view_asset_tag"></span></div>
+                        <div><span class="font-bold text-gray-700">Category:</span> <span id="view_asset_category"></span></div>
+                        <div><span class="font-bold text-gray-700">Brand:</span> <span id="view_asset_brand"></span></div>
+                        <div><span class="font-bold text-gray-700">Model:</span> <span id="view_asset_model"></span></div>
+                        <div><span class="font-bold text-gray-700">Serial Number:</span> <span id="view_asset_serial"></span></div>
+                        <div><span class="font-bold text-gray-700">Condition:</span> <span id="view_asset_condition"></span></div>
+                        <div><span class="font-bold text-gray-700">Deployed To:</span> <span id="view_asset_deployed"></span></div>
+                        <div class="col-span-2"><span class="font-bold text-gray-700">Remarks:</span> <span id="view_asset_remarks"></span></div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">History Logs</h4>
+                    <div id="historyContent" class="space-y-4 max-h-60 overflow-y-auto p-2 bg-gray-50 rounded border">
+                        <!-- Filled via AJAX -->
+                    </div>
+                </div>
+
+                <div class="mt-4 border-t pt-4 flex justify-end">
+                    <button type="button" onclick="closeViewAssetModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Close</button>
                 </div>
             </div>
         </div>
@@ -306,7 +335,7 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="flex justify-center space-x-2">
-                                    <button onclick='viewHistory(${data})' class="text-blue-600 hover:text-blue-900">History</button>
+                                    <button onclick='viewAsset(${JSON.stringify(row)})' class="text-indigo-600 hover:text-indigo-900">View</button>
                                     <button onclick='editAsset(${JSON.stringify(row)})' class="text-primary-600 hover:text-primary-900">Edit</button>
                                     <button onclick='deleteAsset(${data})' class="text-accent-600 hover:text-accent-900">Delete</button>
                                 </div>
@@ -383,6 +412,7 @@
         function openModal() {
             $('#assetForm')[0].reset();
             $('#asset_id').val('');
+            $('#remarks').val('');
             $('#modalTitle').text('Register Asset');
             $('#computer_specs, #monitor_specs, #peripheral_specs').addClass('hidden');
             $('#assetModal').removeClass('hidden');
@@ -405,6 +435,7 @@
             $('#deployment_date').val(data.deployment_date);
             $('#assigned_to').val(data.assigned_to || '');
             $('#condition').val(data.condition);
+            $('#remarks').val(data.remarks || '');
             
             if (data.specifications) {
                 $('#processor').val(data.specifications.processor || '');
@@ -463,22 +494,33 @@
                 }
             });
         }
-        function viewHistory(id) {
+        function viewAsset(data) {
+            // Populate Asset Details
+            $('#view_asset_tag').text(data.asset_tag || 'N/A');
+            $('#view_asset_category').text(data.category ? data.category.name : 'N/A');
+            $('#view_asset_brand').text(data.brand || 'N/A');
+            $('#view_asset_model').text(data.model || 'N/A');
+            $('#view_asset_serial').text(data.serial_number || 'N/A');
+            $('#view_asset_condition').text(data.condition);
+            $('#view_asset_remarks').text(data.remarks || 'N/A');
+            let deployed = data.assigned_employee ? (data.assigned_employee.first_name + ' ' + data.assigned_employee.last_name) : 'Unassigned';
+            $('#view_asset_deployed').text(deployed);
+
             $('#historyContent').html('<div class="text-center text-gray-500 py-4">Loading history...</div>');
-            $('#historyModal').removeClass('hidden');
+            $('#viewAssetModal').removeClass('hidden');
             
-            $.get(`/assets/${id}/history`, function(data) {
-                if (data.length === 0) {
+            $.get(`/assets/${data.id}/history`, function(historyData) {
+                if (historyData.length === 0) {
                     $('#historyContent').html('<div class="text-center text-gray-500 py-4">No history records found.</div>');
                     return;
                 }
                 
                 let html = '<ul class="relative border-l border-gray-200 ml-3">';
-                data.forEach(log => {
+                historyData.forEach(log => {
                     let date = new Date(log.created_at).toLocaleString();
                     let performer = log.performer ? log.performer.name : 'System';
                     html += `
-                        <li class="mb-6 ml-4">
+                        <li class="mb-4 ml-4">
                             <div class="absolute w-3 h-3 bg-primary-600 rounded-full mt-1.5 -left-1.5 border border-white"></div>
                             <time class="mb-1 text-xs font-normal leading-none text-gray-400">${date}</time>
                             <h3 class="text-sm font-semibold text-gray-900">${log.action_type} <span class="font-normal text-xs text-gray-500">by ${performer}</span></h3>
@@ -493,8 +535,8 @@
             });
         }
 
-        function closeHistoryModal() {
-            $('#historyModal').addClass('hidden');
+        function closeViewAssetModal() {
+            $('#viewAssetModal').addClass('hidden');
         }
     </script>
 </x-app-layout>

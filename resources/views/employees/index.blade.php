@@ -1,19 +1,22 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Employee Management') }}
-            </h2>
-            <button onclick="openModal()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded shadow transition-colors">
-                + Register Employee
-            </button>
-        </div>
-    </x-slot>
-
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+                            {{ __('Employee Management') }}
+                        </h2>
+                        <div class="space-x-2">
+                            <button onclick="openImportModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow transition-colors">
+                                Import Employees
+                            </button>
+                            <button onclick="openModal()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded shadow transition-colors">
+                                + Register Employee
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="mb-4 flex items-center space-x-2">
                         <label for="statusFilter" class="text-sm font-medium text-gray-700">Filter Status:</label>
                         <select id="statusFilter" class="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
@@ -28,7 +31,6 @@
                     <table id="employeesTable" class="display w-full border-collapse">
                         <thead>
                             <tr class="bg-primary-50 text-primary-800">
-                                <th class="p-3 border-b text-left">Emp No.</th>
                                 <th class="p-3 border-b text-left">Name</th>
                                 <th class="p-3 border-b text-left">Department</th>
                                 <th class="p-3 border-b text-left">Position</th>
@@ -57,10 +59,6 @@
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Employee Number</label>
-                            <input type="text" id="employee_number" name="employee_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium text-gray-700">Email Address</label>
                             <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
                         </div>
@@ -83,6 +81,10 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Department</label>
                             <input type="text" id="department" name="department" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Location</label>
+                            <input type="text" id="location" name="location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Position</label>
@@ -139,6 +141,81 @@
         </div>
     </div>
 
+    <!-- View Employee Modal -->
+    <div id="viewEmployeeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Employee Details</h3>
+                    <button type="button" onclick="closeViewModal()" class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">Close</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">Employee Details</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div><span class="font-bold text-gray-700">Name:</span> <span id="view_name"></span></div>
+                        <div><span class="font-bold text-gray-700">Email:</span> <span id="view_email"></span></div>
+                        <div><span class="font-bold text-gray-700">Department:</span> <span id="view_department"></span></div>
+                        <div><span class="font-bold text-gray-700">Position:</span> <span id="view_position"></span></div>
+                        <div><span class="font-bold text-gray-700">Location:</span> <span id="view_location"></span></div>
+                        <div><span class="font-bold text-gray-700">Contact Number:</span> <span id="view_contact"></span></div>
+                        <div><span class="font-bold text-gray-700">Date Hired:</span> <span id="view_hired"></span></div>
+                        <div><span class="font-bold text-gray-700">Status:</span> <span id="view_status"></span></div>
+                        <div><span class="font-bold text-gray-700">Last Day Date:</span> <span id="view_separated"></span></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">Accountability Form</h4>
+                    <div id="view_preview_btn_container" class="text-sm">
+                        <!-- Preview button injected here -->
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="text-md font-semibold text-gray-800 border-b pb-1 mb-2">Assigned Assets</h4>
+                    <ul id="view_assets_list" class="list-disc list-inside text-sm text-gray-700">
+                        <!-- Assets injected here -->
+                    </ul>
+                </div>
+                <div class="mt-4 border-t pt-4 flex justify-end">
+                    <button type="button" onclick="closeViewModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 border-b pb-2 mb-4">Import Employees</h3>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-2">1. Download the template and fill it out.</p>
+                    <a href="{{ route('employees.import-template') }}" class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm font-medium">Download Template</a>
+                </div>
+
+                <form id="importForm">
+                    @csrf
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">2. Upload your completed CSV or XLSX file.</p>
+                        <input type="file" id="import_file" name="file" accept=".csv,.xlsx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" required>
+                    </div>
+
+                    <div class="mt-6 border-t pt-4 flex justify-end space-x-2">
+                        <button type="button" onclick="closeImportModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         let table;
 
@@ -153,7 +230,6 @@
             table = $('#employeesTable').DataTable({
                 ajax: '{{ route('employees.index') }}',
                 columns: [
-                    { data: 'employee_number' },
                     { 
                         data: null,
                         render: function(data) {
@@ -180,12 +256,9 @@
                     {
                         data: 'id',
                         render: function(data, type, row) {
-                            let previewBtn = row.accountability_form 
-                                ? `<button onclick='previewForm("${row.accountability_form}")' class="text-blue-600 hover:text-blue-900">Preview Form</button>` 
-                                : '';
                             return `
                                 <div class="flex justify-center space-x-2">
-                                    ${previewBtn}
+                                    <button onclick='viewEmployee(${JSON.stringify(row)})' class="text-indigo-600 hover:text-indigo-900">View</button>
                                     <button onclick='editEmployee(${JSON.stringify(row)})' class="text-primary-600 hover:text-primary-900">Edit</button>
                                     <button onclick='deleteEmployee(${data})' class="text-accent-600 hover:text-accent-900">Delete</button>
                                 </div>
@@ -265,9 +338,9 @@
         function openModal() {
             $('#employeeForm')[0].reset();
             $('#employee_id').val('');
-            $('#employee_number').prop('disabled', false);
-            toggleLastDayField('Active');
+            $('#location').val('');
             $('#modalTitle').text('Register Employee');
+            $('#last_day_container').addClass('hidden');
             $('#employeeModal').removeClass('hidden');
         }
 
@@ -275,11 +348,109 @@
             $('#employeeModal').addClass('hidden');
         }
 
+        function openImportModal() {
+            $('#importForm')[0].reset();
+            $('#importModal').removeClass('hidden');
+        }
+
+        function closeImportModal() {
+            $('#importModal').addClass('hidden');
+        }
+
+        $('#importForm').on('submit', function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            
+            Swal.fire({
+                title: 'Importing...',
+                text: 'Please wait while we process the file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            $.ajax({
+                url: '{{ route('employees.import') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    closeImportModal();
+                    table.ajax.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Import Complete!',
+                        text: response.message,
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                },
+                error: function(xhr) {
+                    let errorMsg = xhr.responseJSON?.message || 'An error occurred during import.';
+                    if (xhr.responseJSON?.errors?.file) {
+                        errorMsg = xhr.responseJSON.errors.file[0];
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Import Failed',
+                        text: errorMsg
+                    });
+                }
+            });
+        });
+
+        function viewEmployee(data) {
+            let mid = data.middle_name ? data.middle_name + ' ' : '';
+            $('#view_name').text(data.first_name + ' ' + mid + data.last_name);
+            $('#view_email').text(data.email);
+            $('#view_department').text(data.department);
+            $('#view_position').text(data.position);
+            $('#view_location').text(data.location || 'N/A');
+            $('#view_contact').text(data.contact_number || 'N/A');
+            $('#view_hired').text(data.date_hired || 'N/A');
+            $('#view_status').text(data.employment_status);
+            $('#view_separated').text(data.date_separated || 'N/A');
+            
+            let printBtnHtml = `<a href="/employees/${data.id}/print-accountability" target="_blank" class="px-3 py-1 mr-2 bg-green-100 text-green-700 rounded hover:bg-green-200 font-medium border border-green-200 inline-block">Print</a>`;
+            if (data.accountability_form) {
+                $('#view_preview_btn_container').html(printBtnHtml + `<button onclick='previewForm("${data.accountability_form}")' class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-medium border border-blue-200">View Form</button>`);
+            } else {
+                $('#view_preview_btn_container').html(printBtnHtml + '<span class="text-gray-500 italic ml-2">No scanned form attached</span>');
+            }
+
+            let assetsHtml = '';
+            if (data.assets && data.assets.length > 0) {
+                data.assets.forEach(asset => {
+                    let category = asset.category ? asset.category.name : 'N/A';
+                    let categorySlug = asset.category ? asset.category.slug : '';
+                    let brand = asset.brand || 'N/A';
+                    let model = asset.model || 'N/A';
+                    
+                    if (categorySlug === 'peripheral' && asset.specifications && asset.specifications.peripheral_type) {
+                        let pType = asset.specifications.peripheral_type;
+                        assetsHtml += `<li><span class="font-semibold text-gray-800">${category}</span> - ${pType} - ${brand} - ${model}</li>`;
+                    } else {
+                        assetsHtml += `<li><span class="font-semibold text-gray-800">${category}</span> - ${brand} - ${model}</li>`;
+                    }
+                });
+            } else {
+                assetsHtml = '<li class="text-gray-500 italic">No assigned assets</li>';
+            }
+            $('#view_assets_list').html(assetsHtml);
+
+            $('#viewEmployeeModal').removeClass('hidden');
+        }
+
+        function closeViewModal() {
+            $('#viewEmployeeModal').addClass('hidden');
+        }
+
         function editEmployee(data) {
             openModal();
             $('#modalTitle').text('Edit Employee');
             $('#employee_id').val(data.id);
-            $('#employee_number').val(data.employee_number).prop('disabled', true);
             $('#email').val(data.email);
             $('#first_name').val(data.first_name);
             $('#middle_name').val(data.middle_name);
@@ -287,6 +458,7 @@
             $('#contact_number').val(data.contact_number);
             $('#department').val(data.department);
             $('#position').val(data.position);
+            $('#location').val(data.location);
             $('#date_hired').val(data.date_hired);
             $('#employment_status').val(data.employment_status);
             toggleLastDayField(data.employment_status);

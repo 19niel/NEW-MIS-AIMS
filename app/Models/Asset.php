@@ -23,6 +23,7 @@ class Asset extends Model
         'condition',
         'status',
         'specifications',
+        'remarks',
     ];
 
     protected $casts = [

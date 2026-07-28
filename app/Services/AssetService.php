@@ -38,6 +38,16 @@ class AssetService
             if (isset($data['antivirus'])) $specs['antivirus'] = $data['antivirus'];
             if (isset($data['antivirus_install_date'])) $specs['antivirus_install_date'] = $data['antivirus_install_date'];
             
+            // Monitor Specific Specs
+            if (isset($data['resolution'])) $specs['resolution'] = $data['resolution'];
+            if (isset($data['refresh_rate'])) $specs['refresh_rate'] = $data['refresh_rate'];
+            if (isset($data['response_time'])) $specs['response_time'] = $data['response_time'];
+            if (isset($data['panel_type'])) $specs['panel_type'] = $data['panel_type'];
+            
+            // Peripheral Specific Specs
+            if (isset($data['peripheral_type'])) $specs['peripheral_type'] = $data['peripheral_type'];
+            if (isset($data['connection_type'])) $specs['connection_type'] = $data['connection_type'];
+            
             $data['specifications'] = $specs;
 
             $asset = $this->repository->create($data);
@@ -70,11 +80,13 @@ class AssetService
             ]);
 
             if ($asset->assigned_to) {
+                $emp = \App\Models\Employee::find($asset->assigned_to);
+                $empDesc = $emp ? $emp->first_name . ' ' . $emp->last_name . ' - ' . $emp->position : 'Unknown Employee';
                 \App\Models\AssetHistory::create([
                     'asset_id' => $asset->id,
                     'asset_tag' => $asset->asset_tag,
                     'action_type' => 'Assigned',
-                    'description' => 'Asset assigned to employee ID: ' . $asset->assigned_to,
+                    'description' => 'Asset assigned to ' . $empDesc,
                     'new_value' => (string)$asset->assigned_to,
                     'performed_by' => auth()->id() ?? 1,
                 ]);
@@ -110,6 +122,16 @@ class AssetService
             if (isset($data['antivirus'])) $specs['antivirus'] = $data['antivirus'];
             if (isset($data['antivirus_install_date'])) $specs['antivirus_install_date'] = $data['antivirus_install_date'];
             
+            // Monitor Specific Specs
+            if (isset($data['resolution'])) $specs['resolution'] = $data['resolution'];
+            if (isset($data['refresh_rate'])) $specs['refresh_rate'] = $data['refresh_rate'];
+            if (isset($data['response_time'])) $specs['response_time'] = $data['response_time'];
+            if (isset($data['panel_type'])) $specs['panel_type'] = $data['panel_type'];
+            
+            // Peripheral Specific Specs
+            if (isset($data['peripheral_type'])) $specs['peripheral_type'] = $data['peripheral_type'];
+            if (isset($data['connection_type'])) $specs['connection_type'] = $data['connection_type'];
+            
             $data['specifications'] = $specs;
 
             $this->repository->update($id, $data);
@@ -138,9 +160,17 @@ class AssetService
             // Track Assigned To change
             if ($oldAssignedTo != $asset->assigned_to) {
                 $action = $asset->assigned_to ? 'Assigned' : 'Unassigned';
-                $desc = $asset->assigned_to 
-                    ? "Asset assigned to employee ID: " . $asset->assigned_to
-                    : "Asset unassigned from employee ID: " . $oldAssignedTo;
+                
+                $desc = '';
+                if ($asset->assigned_to) {
+                    $emp = \App\Models\Employee::find($asset->assigned_to);
+                    $empDesc = $emp ? $emp->first_name . ' ' . $emp->last_name . ' - ' . $emp->position : 'Unknown Employee';
+                    $desc = "Asset assigned to " . $empDesc;
+                } else {
+                    $oldEmp = \App\Models\Employee::find($oldAssignedTo);
+                    $oldEmpDesc = $oldEmp ? $oldEmp->first_name . ' ' . $oldEmp->last_name . ' - ' . $oldEmp->position : 'Unknown Employee';
+                    $desc = "Asset unassigned from " . $oldEmpDesc;
+                }
                     
                 \App\Models\AssetHistory::create([
                     'asset_id' => $asset->id,

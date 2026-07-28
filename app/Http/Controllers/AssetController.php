@@ -36,6 +36,7 @@ class AssetController extends Controller
             'arrival_date' => 'nullable|date',
             'deployment_date' => 'nullable|date',
             'condition' => 'required|string',
+            'remarks' => 'nullable|string',
             
             // Computer Specific Fields
             'ip_address' => 'nullable|string',
@@ -53,6 +54,16 @@ class AssetController extends Controller
             // Storage
             'storage_size' => 'nullable|string',
             'storage_type' => 'nullable|string',
+            
+            // Monitor Specific Fields
+            'resolution' => 'nullable|string',
+            'refresh_rate' => 'nullable|string',
+            'response_time' => 'nullable|string',
+            'panel_type' => 'nullable|string',
+            
+            // Peripheral Specific Fields
+            'peripheral_type' => 'nullable|string',
+            'connection_type' => 'nullable|string',
         ]);
 
         $asset = $this->assetService->createAsset($data);
@@ -76,6 +87,7 @@ class AssetController extends Controller
             'arrival_date' => 'nullable|date',
             'deployment_date' => 'nullable|date',
             'condition' => 'required|string',
+            'remarks' => 'nullable|string',
             
             // Computer Specific Fields
             'ip_address' => 'nullable|string',
@@ -93,6 +105,16 @@ class AssetController extends Controller
             // Storage
             'storage_size' => 'nullable|string',
             'storage_type' => 'nullable|string',
+            
+            // Monitor Specific Fields
+            'resolution' => 'nullable|string',
+            'refresh_rate' => 'nullable|string',
+            'response_time' => 'nullable|string',
+            'panel_type' => 'nullable|string',
+            
+            // Peripheral Specific Fields
+            'peripheral_type' => 'nullable|string',
+            'connection_type' => 'nullable|string',
         ]);
 
         $this->assetService->updateAsset($id, $data);
