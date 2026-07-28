@@ -1,59 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MIS AIMS - Beta Deployment Guide
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This guide provides step-by-step instructions on how to deploy the MIS AIMS application on a XAMPP server for beta testing over your local network using the IP `192.168.3.12`.
 
-## About Laravel
+## Prerequisites
+- **XAMPP** installed (with Apache and MySQL modules running)
+- **Composer** installed globally
+- **Node.js** and **npm** installed
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Step 1: Database Setup
+1. Open your XAMPP Control Panel and start **Apache** and **MySQL**.
+2. Go to phpMyAdmin in your browser (usually `http://localhost/phpmyadmin`).
+3. Create a new database for the system (e.g., `mis_aims`).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Step 2: Configure Environment Variables
+1. Navigate to your project folder.
+2. Copy the `.env.example` file and rename the copy to `.env`.
+3. Open the `.env` file in a text editor and update the following settings to match your beta environment:
 
-## Learning Laravel
+   ```env
+   APP_NAME="MIS AIMS"
+   APP_ENV=local
+   APP_KEY=
+   APP_DEBUG=true
+   APP_URL=http://192.168.3.12:8000
+   
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=mis_aims
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+   *(Make sure `DB_DATABASE` matches the database you created in Step 1. Leave `DB_PASSWORD` blank if you haven't set a root password in XAMPP).*
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Step 3: Install PHP Dependencies
+1. Open your terminal (or Command Prompt) as Administrator.
+2. Navigate to your project folder using `cd` (e.g., `cd C:\xampp\htdocs\mis-aims`).
+3. Install the required PHP packages:
+   ```bash
+   composer install
+   ```
+4. Generate the application key (this will update your `.env` file):
+   ```bash
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Step 4: Run Migrations and Seeders
+In the same terminal, run the database migrations to create the tables, and seed the initial data (like your admin account):
+```bash
+php artisan migrate:fresh --seed
+```
 
-## Laravel Sponsors
+## Step 5: Install NPM Dependencies & Start Vite Server
+Because you are running the app across a local network for beta testing, Vite needs to be told to listen on your specific network IP.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Install the Node.js packages:
+   ```bash
+   npm install
+   ```
+2. Start the Vite development server on your network IP:
+   ```bash
+   npm run dev -- --host 192.168.3.12
+   ```
+   *(Keep this terminal window open. This ensures your CSS and JS assets are served properly to anyone accessing the site from another device).*
 
-### Premium Partners
+## Step 6: Serve the Application
+You have two options for serving the application PHP code:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Option A: Using PHP Artisan Serve (Recommended for Beta)
+1. Open **a new, second terminal window** (leave `npm run dev` running in the first one).
+2. Navigate back to your project directory.
+3. Serve the application on your network IP:
+   ```bash
+   php artisan serve --host=192.168.3.12 --port=8000
+   ```
+4. **Access the app:** Anyone on the network can now visit **`http://192.168.3.12:8000`**.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Option B: Using XAMPP Apache Directly
+If you placed the project inside your XAMPP `htdocs` folder (e.g., `htdocs/mis-aims`):
+1. Ensure your `APP_URL` in `.env` is set to `http://192.168.3.12/mis-aims/public`.
+2. You do **not** need to run `php artisan serve`.
+3. **Access the app:** Anyone on the network can visit **`http://192.168.3.12/mis-aims/public`**.
+*(Note: You still need to keep the `npm run dev -- --host 192.168.3.12` terminal running in the background).*

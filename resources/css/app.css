@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fix DataTables length dropdown styling */
+.dataTables_wrapper .dataTables_length select {
+    min-width: 4.5rem !important;
+    padding-right: 2rem !important;
+    padding-left: 0.5rem !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+    background-position: right 0.5rem center !important;
+}
