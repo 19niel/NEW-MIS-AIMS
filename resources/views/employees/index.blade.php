@@ -315,14 +315,26 @@
                         });
                     },
                     error: function(xhr) {
-                        let errors = xhr.responseJSON.errors;
-                        let errorMsg = '';
-                        for(let key in errors) {
-                            errorMsg += errors[key][0] + '<br>';
+                        let errorMsg = 'An unexpected error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            let errors = xhr.responseJSON.errors;
+                            errorMsg = '';
+                            for(let key in errors) {
+                                errorMsg += errors[key][0] + '<br>';
+                            }
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        } else if (xhr.status === 403) {
+                            errorMsg = 'Action Forbidden (403). Please check your permissions or CSRF token.';
+                        } else if (xhr.status === 419) {
+                            errorMsg = 'Session expired. Please refresh the page.';
+                        } else {
+                            errorMsg = 'Server returned status: ' + xhr.status;
                         }
+                        
                         Swal.fire({
                             icon: 'error',
-                            title: 'Validation Error',
+                            title: 'Error',
                             html: errorMsg
                         });
                     }
@@ -335,7 +347,7 @@
         });
 
         function toggleLastDayField(status) {
-            if (['Resigned', 'Retired', 'Terminated'].includes(status)) {
+            if (['Resigned', 'Retired', 'Terminated', 'AWOL'].includes(status)) {
                 $('#last_day_container').removeClass('hidden');
             } else {
                 $('#last_day_container').addClass('hidden');

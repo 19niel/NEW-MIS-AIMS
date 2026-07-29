@@ -32,7 +32,7 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees',
             'contact_number' => 'nullable|string',
             'date_hired' => 'nullable|date',
-            'date_separated' => 'nullable|date',
+            'date_separated' => 'required_if:employment_status,Resigned,Terminated,AWOL,Retired|nullable|date',
             'employment_status' => 'required|string',
             'location' => 'nullable|string',
             'remarks' => 'nullable|string',
@@ -63,7 +63,8 @@ class EmployeeController extends Controller
             'position' => 'required|string',
             'email' => 'required|email|unique:employees,email,'.$id,
             'contact_number' => 'nullable|string',
-            'date_separated' => 'nullable|date',
+            'date_hired' => 'nullable|date',
+            'date_separated' => 'required_if:employment_status,Resigned,Terminated,AWOL,Retired|nullable|date',
             'employment_status' => 'required|string',
             'location' => 'nullable|string',
             'accountability_form' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
